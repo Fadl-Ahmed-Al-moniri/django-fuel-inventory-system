@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Warehouse movement report by specific Warehouse</title>
+    <style>
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 10px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: left; /* Changed to left for English */
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 8px;
+            color: #777;
+        }
+        ul {
+            padding-left: 20px; /* Indent list items */
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Warehouse movement report by specific Warehouse</h1>
+        <p>Report Date: {{ current_date }}</p>
+    </div>
+
+    <div class="footer">
+        <p>Warehouse Management System - Page <span class="page-number"></span></p>
+    </div>
+
+    <!-- Supplies Section -->
+    {% if report_data.supplies %}
+        <h2>Section Supplies:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Operation ID</th>
+                    <th>Warehouse</th>
+                    <th>Date</th>
+                    <th>Supplier</th>
+                    <th>Stations</th>
+                    <th>Items</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in report_data.supplies %}
+                    <tr>
+                        <td>{{ record.id }}</td>
+                        <td>{{ record.warehouse_name }}</td>
+                        <td>{{ record.operation_date }}</td>
+                        <td>{{ record.supplier_name }}</td>
+                        <td>{{ record.stations_name }}</td>
+                        <td>
+                            <ul>
+                            {% for item in record.items %}
+                                <li >Name: {{ item.item_name}}</li>
+                                <li >Quantity: {{ item.quantity }}</li></li>
+                                <li>Returned quantity: {{ item.returned_quantity}} </li>
+                                <li>Effective quantity: {{ item.effective_quantity}} </li>
+                            {% endfor  %}
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <!-- Dispatches Section -->
+    {% if report_data.dispatches %}
+        <h2>Section Dispatches:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Operation ID</th>
+                    <th>Warehouse</th>
+                    <th>Date</th>
+                    <th>Beneficiary</th>
+                    <th>Items</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in report_data.dispatches %}
+                    <tr>
+                        <td>{{ record.id }}</td>
+                        <td>{{ record.warehouse_name }}</td>
+                        <td>{{ record.operation_date }}</td> 
+                        <td>{{ record.beneficiary_name }}</td>
+                        <td>
+                            <ul>
+                            {% for item in record.items %}
+                                <li >Name: {{ item.item_name}}</li>
+                                <li >Quantity: {{ item.quantity }}</li></li>
+                                <li>Returned quantity: {{ item.returned_quantity}} </li>
+                                <li>Effective quantity: {{ item.effective_quantity}} </li>
+                            {% endfor  %}
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <!-- Returns Section -->
+    {% if report_data.returns.supply_returns or report_data.returns.dispatch_returns %}
+        <h2>Section Returns:</h2>
+        
+        <!-- Supply Returns -->
+        {% if report_data.returns.supply_returns %}
+            <h3>Supply Returns:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Return ID</th>
+                        <th>Warehouse</th>
+                        <th>Date</th>
+                        <th>Original Operation ID</th>
+                        <th>Supplier</th>
+                        <th>Stations</th>
+                        <th>Returned Items</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in report_data.returns.supply_returns %}
+                        <tr>
+                            <td>{{ record.id }}</td>
+                            <td>{{ record.warehouse_name }}</td>
+                            <td>{{ record.operation_date }}</td>
+                            <td>{{ record.original_operation_id }}</td>
+                            <td>{{ record.supplier_name }}</td>
+                            <td>{{ record.stations_name }}</td>
+                            <td>
+                                <ul>
+                                {% for item in record.returned_items %}
+                                    <li >Name: {{ item.item_name}}</li>
+                                    <li >Quantity: {{ item.quantity }}</li></li>
+                                    <li>Returned quantity: {{ item.returned_quantity}} </li>
+                                    <li>Effective quantity: {{ item.effective_quantity}} </li>
+                                {% endfor  %}
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        <!-- Dispatch Returns -->
+        {% if report_data.returns.dispatch_returns %}
+            <h3>Dispatch Returns:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Return ID</th>
+                        <th>Warehouse</th>
+                        <th>Date</th>
+                        <th>Beneficiary</th>
+                        <th>Original Operation ID</th>
+                        <th>Returned Items</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in report_data.returns.dispatch_returns %}
+                        <tr>
+                            <td>{{ record.id }}</td>
+                            <td>{{ record.warehouse_name }}</td>
+                            <td>{{ record.operation_date }}</td>
+                            <td>{{ record.beneficiary_name }}</td>
+                            <td>{{ record.original_operation_id }}</td>
+                            <td>
+                                <ul>
+                                {% for item in record.returned_items %}
+                                    <li >Name: {{ item.item_name}}</li>
+                                    <li >Quantity: {{ item.quantity }}</li></li>
+                                    <li>Returned quantity: {{ item.returned_quantity}} </li>
+                                    <li>Effective quantity: {{ item.effective_quantity}} </li>
+                                    <br>
+                                {% endfor  %}
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    {% endif %}
+
+    <!-- Damages Section -->
+    {% if report_data.damages %}
+        <h2>Section Damages:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Operation ID</th>
+                    <th>Warehouse</th>
+                    <th>Date</th>
+                    <th>Reason</th>
+                    <th>Damaged Items</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in report_data.damages %}
+                    <tr>
+                        <td>{{ record.id }}</td>
+                        <td>{{ record.warehouse_name }}</td>
+                        <td>{{ record.operation_date }}</td>
+                        <td>{{ record.reason }}</td>
+                        <td>
+                            <ul>
+                            {% for item in record.items %}
+                                <li >Name: {{ item.item_name}}</li>
+                                <li >Quantity: {{ item.quantity }}</li></li>
+                                <li>Returned quantity: {{ item.returned_quantity}} </li>
+                                <li>Effective quantity: {{ item.effective_quantity}} </li>
+                            {% endfor  %}
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+</body>
+</html>

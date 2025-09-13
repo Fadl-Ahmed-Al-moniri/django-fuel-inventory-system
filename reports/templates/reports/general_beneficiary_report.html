@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report of export movement according to a specific beneficiary.</title>
+    <style>
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 10px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: left; /* Changed to left for English */
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 8px;
+            color: #777;
+        }
+        ul {
+            padding-left: 20px; /* Indent list items */
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Report of export movement according to a specific beneficiary.</h1>
+        <p>Report Date: {{ current_date }}</p>
+    </div>
+
+    <div class="footer">
+        <p>Report of export movement according to a specific beneficiary.<span class="page-number"></span></p>
+    </div>
+
+    <!-- Supplies Section -->
+    {% if report_data %}
+        <h2>Export Operation:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Operation ID</th>
+                    <th>Warehouse</th>
+                    <th>Date</th>
+                    <th>Supplier</th>
+                    <th>Stations</th>
+                    <th>Items</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in report_data.supplies %}
+                    <tr>
+                        <td>{{ record.id }}</td>
+                        <td>{{ record.warehouse_name }}</td>
+                        <td>{{ record.operation_date }}</td>
+                        <td>{{ record.supplier_name }}</td>
+                        <td>{{ record.stations_name }}</td>
+                        <td>
+                            <ul>
+                            {% for item in record.items %}
+                                <li >Name: {{ item.item_name}}</li>
+                                <li >Quantity: {{ item.quantity }}</li></li>
+                                <li>Returned quantity: {{ item.returned_quantity}} </li>
+                                <li>Effective quantity: {{ item.effective_quantity}} </li>
+                            {% endfor  %}
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</body>
+</html>

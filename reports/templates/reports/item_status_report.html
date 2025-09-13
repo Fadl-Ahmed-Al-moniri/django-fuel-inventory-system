@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Item Status Report in the Warehouse</title>
+    <style>
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 12px; /* Slightly larger font for readability */
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 10px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Item Status Report in the Warehouse</h1>
+        <p>Report Date: {{ current_date }}</p>
+    </div>
+
+    <div class="footer">
+        <p>Warehouse Management System - Page <span class="page-number"></span></p>
+    </div>
+        {% if report_data %}
+        <h2>Items Status in Warehouse:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item ID</th>
+                    <th>Item Name</th>
+                    <th>Warehouse</th>
+                    <th>Opening Balance</th>
+                    <th>Current Quantity</th>
+                    <th>Unit of Measure</th>
+                    <th>Last Updated</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in report_data %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.item_name }}</td>
+                        <td>{{ item.warehouse_name }}</td>
+                        <td>{{ item.opening_balance }}</td>
+                        <td>{{ item.current_quantity }}</td>
+                        <td>{{ item.unit_of_measure }}</td>
+                        <td>{{ item.last_updated }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+</body>
+</html>

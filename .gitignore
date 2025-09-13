@@ -1,0 +1,27 @@
+# Environment variables
+# Never commit this file!
+.env
+
+# Django project specific files
+*.log
+/media/
+
+# Python virtual environment
+env/
+.venv/
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+/static/
